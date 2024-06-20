@@ -94,7 +94,6 @@ module.exports = {
     createUserController,
     getUserByIdController,
     addBlockedUserController,
-    isUserBlockedController,
     getMessagesReceivedController,
     addMessageController
 };
