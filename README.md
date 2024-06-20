@@ -11,6 +11,7 @@ This project is a cloud-based backend for a messaging system, similar to Telegra
   - Add/remove users from groups
   - Send messages to groups
   - Retrieve messages received by users and groups
+  - Retrieve Users and Groups
 
 ## Technology Stack
 - **Language**: JavaScript
