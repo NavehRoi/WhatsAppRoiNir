@@ -20,108 +20,86 @@ This project is a cloud-based backend for a messaging system, similar to Telegra
 ## Endpoints
 HTTP endpoints are implemented:
 ### Users
-  1. Create User
-    -  POST /users/create
-    -  Returns: A new user ID.
-       http://localhost:3000/users/create
-  2. Get User by ID
-    -  GET /users/{userId}
-    -  Returns: User details for the specified user ID.
-       http://localhost:3000/users/{userId}
-  3. Add Message
-    -  POST /users/message
-    -  Body: { "senderId": "sender-id", "message": "Hello, how are you?", "recipientId": "recipient-id" }
-        Returns: Confirmation of message sent.
-       http://localhost:3000/users/message -H "Content-Type: application/json" -d '{"senderId":"sender-id","message":"Hello, how are you?","recipientId":"recipient-id"}'
-  4. Add Blocked User
-    -  POST /users/block//{userId, blockedId}
-    -  Returns: A new user ID.
-       http://localhost:3000/users/create
-  5. Create User
-    -  POST /users/create
-    -  Returns: A new user ID.
-         http://localhost:3000/users/create
+#### 1. Create User
+      -  POST /users/create
+      -  Returns: A new user ID.
+      -  Example: `http://localhost:3000/users/create`
+       
+#### 2. Get User by ID
+      -  GET /users/{userId}
+      -  Returns: User details for the specified user ID.
+      -  Example: `http://localhost:3000/users/{userId}`
+         
+#### 3. Add Message
+      -  POST /users/message
+      -  Body: { "senderId": "sender-id", "message": "Hello, how are you?", "recipientId": "recipient-id" }
+      -  Returns: Confirmation of message sent.
+      -  Example: `http://localhost:3000/users/message -H "Content-Type: application/json" -d '{"senderId":"sender-id","message":"Hello, how are you?","recipientId":"recipient-id"}'`
+     
+#### 4. Add Blocked User
+      -  POST /users/block
+      -  Params: userId, blockedUserId
+      -  Returns: Confirmation of user blocked.
+      -  Example: `http://localhost:3000/users/block?userId={user-id}&blockedUserId={blocked-user-id}`
+       
+#### 6. Get Messages Received
+    -  GET /users/messages/{userId}
+    -  Params: userId
+    -  Returns: Messages received by the specified user.
+    -  Example: `http://localhost:3000/users/messages/{userId}`
 
 
 
-Add Blocked User
 
-POST /users/block
-Body: { "userId": "user-id", "blockedUserId": "blocked-user-id" }
-Returns: Confirmation of user blocked.
-bash
-Copy code
-curl -X POST http://localhost:3000/users/block -H "Content-Type: application/json" -d '{"userId":"user-id","blockedUserId":"blocked-user-id"}'
-Check if User is Blocked
 
-POST /users/isBlocked
-Body: { "userId": "user-id", "blockedUserId": "blocked-user-id" }
-Returns: Whether the user is blocked.
-bash
-Copy code
-curl -X POST http://localhost:3000/users/isBlocked -H "Content-Type: application/json" -d '{"userId":"user-id","blockedUserId":"blocked-user-id"}'
-Get Messages Received
-
-GET /users/{userId}/messages
-Returns: Messages received by the specified user.
-bash
-Copy code
-curl -X GET http://localhost:3000/users/{userId}/messages
 Groups
 Create Group
 
 POST /groups/create
-Body: { "name": "Group Name" }
+Params: name
 Returns: A new group ID.
-bash
-Copy code
-curl -X POST http://localhost:3000/groups/create -H "Content-Type: application/json" -d '{"name":"Group Name"}'
+Example: http://localhost:3000/groups/create?name=Group Name
 Get Group by ID
 
 GET /groups/{groupId}
 Returns: Group details for the specified group ID.
-bash
-Copy code
-curl -X GET http://localhost:3000/groups/{groupId}
+Example: http://localhost:3000/groups/{groupId}
 Add Member to Group
 
 POST /groups/addMember
-Body: { "groupId": "group-id", "userId": "user-id" }
+Params: groupId, userId
 Returns: Confirmation of member added.
-bash
-Copy code
-curl -X POST http://localhost:3000/groups/addMember -H "Content-Type: application/json" -d '{"groupId":"group-id","userId":"user-id"}'
+Example: http://localhost:3000/groups/addMember?groupId=group-id&userId=user-id
 Remove Member from Group
 
 POST /groups/removeMember
-Body: { "groupId": "group-id", "userId": "user-id" }
+Params: groupId, userId
 Returns: Confirmation of member removed.
-bash
-Copy code
-curl -X POST http://localhost:3000/groups/removeMember -H "Content-Type: application/json" -d '{"groupId":"group-id","userId":"user-id"}'
+Example: http://localhost:3000/groups/removeMember?groupId=group-id&userId=user-id
 Add Message to Group
 
 POST /groups/addMessage
-Body: { "groupId": "group-id", "senderId": "sender-id", "message": "Hello, group!" }
+Params: groupId, senderId, message
 Returns: Confirmation of message sent.
-bash
-Copy code
-curl -X POST http://localhost:3000/groups/addMessage -H "Content-Type: application/json" -d '{"groupId":"group-id","senderId":"sender-id","message":"Hello, group!"}'
+Example: http://localhost:3000/groups/addMessage?groupId=group-id&senderId=sender-id&message=Hello, group!
 Get Messages Received by Group
 
 GET /groups/{groupId}/messages
 Returns: Messages received by the specified group.
-bash
-Copy code
-curl -X GET http://localhost:3000/groups/{groupId}/messages
+Example: http://localhost:3000/groups/{groupId}/messages
 Check if User is a Member of Group
 
 POST /groups/isMember
-Body: { "groupId": "group-id", "userId": "user-id" }
+Params: groupId, userId
 Returns: Whether the user is a member of the group.
-bash
-Copy code
-curl -X POST http://localhost:3000/groups/isMember -H "Content-Type: application/json" -d '{"group
+Example: http://localhost:3000/groups/isMember?groupId=group-id&userId=user-id
+Scaling Discussion
+Scaling Effects and Costs
+1000s of Users: The system can handle this load with moderate costs. DynamoDB's auto-scaling will manage read/write throughput as demand grows. Estimated monthly cost: $100-$500.
+
+10,000s of Users: Requires sharding or partitioning data to avoid capacity limits. Increased read/write operations will be handled by DynamoDB auto-scaling, and additional EC2 instances may be necessary. Estimated monthly cost: $500-$2000.
+
+Millions of Users: Robust scaling strategies needed, including DynamoDB auto-scaling, read replicas, and caching (e.g., Amazon ElastiCache) to reduce load. Infrastructure costs will be high but necessary for performance. Estimated monthly cost: $2000-$10,000+.
 
 # CloudFormation Template
 A CloudFormation template (`cloudFormation.json`) is provided in the repository to create the stack.
