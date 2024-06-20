@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-
+// add keys here
 
 const dynamoDB = new AWS.DynamoDB();
 

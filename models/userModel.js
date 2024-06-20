@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
 
-
+// add keys here
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
@@ -35,13 +35,14 @@ const getUserById = (userId) => {
     return dynamoDB.get(params).promise()
         .catch((error) => console.error('Error getting user by id:', error));
 };
+
 const addMessage = (senderId, message, recipientId) => {
     const params = {
         TableName: TABLE_NAME,
         Key: { id: recipientId },
-        UpdateExpression: "ADD messagesReceived :message",
+        UpdateExpression: "SET messagesReceived = list_append(messagesReceived, :message)",
         ExpressionAttributeValues: {
-            ":message": dynamoDB.createSet([senderId + ": " + message])
+            ":message": [`${senderId}: ${message}`]
         },
         ReturnValues: "UPDATED_NEW"
     };
@@ -53,9 +54,9 @@ const addBlockedUser = (userId, blockedUserId) => {
     const params = {
         TableName: TABLE_NAME,
         Key: { id: userId },
-        UpdateExpression: "ADD blockedUsers :blockedUserId",
+        UpdateExpression: "SET blockedUsers = list_append(blockedUsers, :blockedUserId)",
         ExpressionAttributeValues: {
-            ":blockedUserId": dynamoDB.createSet([blockedUserId])
+            ":blockedUserId": [blockedUserId]
         },
         ReturnValues: "UPDATED_NEW"
     };
