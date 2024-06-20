@@ -5,11 +5,11 @@ const {
     removeMemberFromGroup,
     addMessageToGroup,
     getMessagesReceivedByGroup,
-    isUserMemberOfGroup
 } = require('../models/groupModel');
+const { getUserById } = require('../models/userModel');
 
 const createGroupController = async (req, res) => {
-    const { name } = req.body;
+    const { name } = req.query;
     if (!name) {
         return res.status(400).json({ error: 'Group name is required' });
     }
@@ -39,11 +39,15 @@ const getGroupByIdController = async (req, res) => {
 };
 
 const addMemberToGroupController = async (req, res) => {
-    const { groupId, userId } = req.body;
+    const { groupId, userId } = req.query;
     if (!groupId || !userId) {
         return res.status(400).json({ error: 'Group ID and User ID are required' });
     }
     try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
         await addMemberToGroup(groupId, userId);
         res.status(200).json({ message: 'Member added to group successfully' });
     } catch (error) {
@@ -52,11 +56,15 @@ const addMemberToGroupController = async (req, res) => {
 };
 
 const removeMemberFromGroupController = async (req, res) => {
-    const { groupId, userId } = req.body;
+    const { groupId, userId } = req.query;
     if (!groupId || !userId) {
         return res.status(400).json({ error: 'Group ID and User ID are required' });
     }
     try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
         await removeMemberFromGroup(groupId, userId);
         res.status(200).json({ message: 'Member removed from group successfully' });
     } catch (error) {
@@ -70,6 +78,10 @@ const addMessageToGroupController = async (req, res) => {
         return res.status(400).json({ error: 'Group ID, Sender ID, and Message are required' });
     }
     try {
+        const user = await getUserById(senderId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
         await addMessageToGroup(groupId, senderId, message);
         res.status(200).json({ message: 'Message added to group successfully' });
     } catch (error) {
@@ -90,18 +102,6 @@ const getMessagesReceivedByGroupController = async (req, res) => {
     }
 };
 
-const isUserMemberOfGroupController = async (req, res) => {
-    const { groupId, userId } = req.body;
-    if (!groupId || !userId) {
-        return res.status(400).json({ error: 'Group ID and User ID are required' });
-    }
-    try {
-        const isMember = await isUserMemberOfGroup(groupId, userId);
-        res.status(200).json({ isMember });
-    } catch (error) {
-        res.status(500).json({ error: 'Error checking if user is a member of the group' });
-    }
-};
 
 module.exports = {
     createGroupController,
@@ -110,5 +110,4 @@ module.exports = {
     removeMemberFromGroupController,
     addMessageToGroupController,
     getMessagesReceivedByGroupController,
-    isUserMemberOfGroupController
 };

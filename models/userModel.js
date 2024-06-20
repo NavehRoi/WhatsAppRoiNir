@@ -1,9 +1,6 @@
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
 
-//add here
-
-
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 const TABLE_NAME = 'Users';

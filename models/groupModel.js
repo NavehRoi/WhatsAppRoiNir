@@ -3,10 +3,6 @@ const { v4: uuidv4 } = require('uuid');
 
 const AWS = require('aws-sdk');
 
-
-//add here
-
-
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 const TABLE_NAME = 'Groups';

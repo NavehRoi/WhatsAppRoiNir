@@ -1,8 +1,5 @@
 const AWS = require('aws-sdk');
 
-//add here 
-
-
 const dynamoDB = new AWS.DynamoDB();
 
 const createUsersTable = () => {
