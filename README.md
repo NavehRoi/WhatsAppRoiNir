@@ -42,64 +42,58 @@ HTTP endpoints are implemented:
       -  Returns: Confirmation of user blocked.
       -  Example: `http://localhost:3000/users/block?userId={user-id}&blockedUserId={blocked-user-id}`
        
-#### 6. Get Messages Received
-    -  GET /users/messages/{userId}
-    -  Params: userId
-    -  Returns: Messages received by the specified user.
-    -  Example: `http://localhost:3000/users/messages/{userId}`
+#### 5. Get Messages Received
+      -  GET /users/{userId}/messages
+      -  Returns: Messages received by the specified user.
+      -  Example: http://localhost:3000/users/{userId}/messages
+
+
+### Groups
+#### 1. Create Group
+      -  POST /groups/create
+      -  Params: name
+      -  Returns: A new group ID.
+      -  Example: http://localhost:3000/groups/create?name={Group Name}
+       
+#### 2. Get Group by ID
+      -  GET /groups/{groupId}
+      -  Returns: Group details for the specified group ID.
+      -  Example: http://localhost:3000/groups/{groupId}
+               
+#### 3. Add Message to Group
+      -  POST /groups/addMessage
+      -  Body: { groupId: "Gruoup Id", senderId:"sender ID", message:"The Message" }
+      -  Returns: Confirmation of message sent.
+      -  Example: `http://localhost:3000/groups/addMessagee -H "Content-Type: application/json" -d '{groupId: "Gruoup Id", senderId:"sender ID", message:"The Message"}'`
+     
+#### 4. Add Member to Group
+      -  POST /groups/addMember
+      -  Params: groupId, userId
+      -  Returns: Confirmation of member added.
+      -  Example: http://localhost:3000/groups/addMember?groupId={group-id}&userId={user-id}`
+      
+#### 5. Remove Member from Group
+      -  POST /groups/removeMember
+      -  Params: groupId, userId
+      -  Returns: Confirmation of member removed.
+      -  Example: http://localhost:3000/groups/removeMember?groupId={group-id}&userId={user-id}
+               
+#### 6. Get Messages Received by Group
+      -  GET /groups/{groupId}/messages
+      -  Returns: Messages received by the specified group.
+      -  Example: http://localhost:3000/groups/{groupId}/messages
 
 
 
 
+# Scaling Discussion
+## Scaling Effects and Costs
+**1000s of Users:** The system can handle this load with moderate costs. DynamoDB's auto-scaling will manage read/write throughput as demand grows. Estimated monthly cost: $100-$500.
 
-Groups
-Create Group
+**10,000s of Users:** Requires sharding or partitioning data to avoid capacity limits. Increased read/write operations will be handled by DynamoDB auto-scaling, and additional EC2 instances may be necessary. Estimated monthly cost: $500-$2000.
 
-POST /groups/create
-Params: name
-Returns: A new group ID.
-Example: http://localhost:3000/groups/create?name=Group Name
-Get Group by ID
+**Millions of Users:** Robust scaling strategies needed, including DynamoDB auto-scaling, read replicas, and caching (e.g., Amazon ElastiCache) to reduce load. Infrastructure costs will be high but necessary for performance. Estimated monthly cost: $2000-$10,000+.
 
-GET /groups/{groupId}
-Returns: Group details for the specified group ID.
-Example: http://localhost:3000/groups/{groupId}
-Add Member to Group
-
-POST /groups/addMember
-Params: groupId, userId
-Returns: Confirmation of member added.
-Example: http://localhost:3000/groups/addMember?groupId=group-id&userId=user-id
-Remove Member from Group
-
-POST /groups/removeMember
-Params: groupId, userId
-Returns: Confirmation of member removed.
-Example: http://localhost:3000/groups/removeMember?groupId=group-id&userId=user-id
-Add Message to Group
-
-POST /groups/addMessage
-Params: groupId, senderId, message
-Returns: Confirmation of message sent.
-Example: http://localhost:3000/groups/addMessage?groupId=group-id&senderId=sender-id&message=Hello, group!
-Get Messages Received by Group
-
-GET /groups/{groupId}/messages
-Returns: Messages received by the specified group.
-Example: http://localhost:3000/groups/{groupId}/messages
-Check if User is a Member of Group
-
-POST /groups/isMember
-Params: groupId, userId
-Returns: Whether the user is a member of the group.
-Example: http://localhost:3000/groups/isMember?groupId=group-id&userId=user-id
-Scaling Discussion
-Scaling Effects and Costs
-1000s of Users: The system can handle this load with moderate costs. DynamoDB's auto-scaling will manage read/write throughput as demand grows. Estimated monthly cost: $100-$500.
-
-10,000s of Users: Requires sharding or partitioning data to avoid capacity limits. Increased read/write operations will be handled by DynamoDB auto-scaling, and additional EC2 instances may be necessary. Estimated monthly cost: $500-$2000.
-
-Millions of Users: Robust scaling strategies needed, including DynamoDB auto-scaling, read replicas, and caching (e.g., Amazon ElastiCache) to reduce load. Infrastructure costs will be high but necessary for performance. Estimated monthly cost: $2000-$10,000+.
 
 # CloudFormation Template
 A CloudFormation template (`cloudFormation.json`) is provided in the repository to create the stack.
