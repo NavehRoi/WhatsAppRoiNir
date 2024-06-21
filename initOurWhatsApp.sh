@@ -6,7 +6,7 @@ curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo yum install -y nodejs
 sudo npm install -g pm2
 git clone https://github.com/NavehRoi/WhatsAppRoiNir.git
-cd parkingLot
+cd WhatsAppRoiNir
 npm install
 node server.js
 echo "Deployment completed successfully. Application is running on port 3000."
