@@ -5,7 +5,7 @@ sudo yum install git -y
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo yum install -y nodejs
 sudo npm install -g pm2
-git clone git@github.com:NavehRoi/WhatsAppRoiNir.git
+git clone https://github.com/NavehRoi/WhatsAppRoiNir.git
 cd parkingLot
 npm install
 node server.js
