@@ -1,10 +1,7 @@
-
 const { v4: uuidv4 } = require('uuid');
-
 const AWS = require('aws-sdk');
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-
 const TABLE_NAME = 'Groups';
 
 const createGroup = (name) => {
@@ -34,7 +31,10 @@ const getGroupById = (groupId) => {
         Key: { id: groupId },
     };
     return dynamoDB.get(params).promise()
-        .catch((error) => console.error('Error getting group by id:', error));
+        .catch((error) => {
+            console.error('Error getting group by id:', error);
+            throw error;
+        });
 };
 
 const addMemberToGroup = (groupId, userId) => {
@@ -48,24 +48,31 @@ const addMemberToGroup = (groupId, userId) => {
         ReturnValues: "UPDATED_NEW"
     };
     return dynamoDB.update(params).promise()
-        .catch((error) => console.error('Error adding member to group:', error));
+        .catch((error) => {
+            console.error('Error adding member to group:', error);
+            throw error;
+        });
 };
 
 const removeMemberFromGroup = async (groupId, userId) => {
-    const group = await getGroupById(groupId);
-    const updatedMembers = group.Item.members.filter(member => member !== userId);
+    try {
+        const group = await getGroupById(groupId);
+        const updatedMembers = group.Item.members.filter(member => member !== userId);
 
-    const params = {
-        TableName: TABLE_NAME,
-        Key: { id: groupId },
-        UpdateExpression: "SET members = :members",
-        ExpressionAttributeValues: {
-            ":members": updatedMembers
-        },
-        ReturnValues: "UPDATED_NEW"
-    };
-    return dynamoDB.update(params).promise()
-        .catch((error) => console.error('Error removing member from group:', error));
+        const params = {
+            TableName: TABLE_NAME,
+            Key: { id: groupId },
+            UpdateExpression: "SET members = :members",
+            ExpressionAttributeValues: {
+                ":members": updatedMembers
+            },
+            ReturnValues: "UPDATED_NEW"
+        };
+        return dynamoDB.update(params).promise();
+    } catch (error) {
+        console.error('Error removing member from group:', error);
+        throw error;
+    }
 };
 
 const addMessageToGroup = (groupId, senderId, message) => {
@@ -79,7 +86,10 @@ const addMessageToGroup = (groupId, senderId, message) => {
         ReturnValues: "UPDATED_NEW"
     };
     return dynamoDB.update(params).promise()
-        .catch((error) => console.error('Error adding message to group:', error));
+        .catch((error) => {
+            console.error('Error adding message to group:', error);
+            throw error;
+        });
 };
 
 const getMessagesReceivedByGroup = async (groupId) => {
@@ -91,7 +101,7 @@ const getMessagesReceivedByGroup = async (groupId) => {
         return [];
     } catch (error) {
         console.error('Error getting messages received by group:', error);
-        return [];
+        throw error;
     }
 };
 
@@ -104,7 +114,7 @@ const isUserMemberOfGroup = async (groupId, userId) => {
         return false;
     } catch (error) {
         console.error('Error checking if user is a member of the group:', error);
-        return false;
+        throw error;
     }
 };
 

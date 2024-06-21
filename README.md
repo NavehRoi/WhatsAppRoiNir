@@ -1,7 +1,7 @@
 # WhatsAppRoiNir
 ## Messaging System Backend
 ## Overview
-This project is a cloud-based backend for a messaging system, similar to Telegram or WhatsApp. It provides endpoints to register users, send messages, create groups, and manage group members. The backend is built using Node.js and AWS DynamoDB.
+This project is a cloud-based backend for a messaging system, similar to Telegram or WhatsApp. It provides endpoints to register users, send messages, create groups, and manage group members. Backend only.
 
 ## Features
   - Register a new user
@@ -17,6 +17,9 @@ This project is a cloud-based backend for a messaging system, similar to Telegra
 - **Language**: JavaScript
 - **Framework**: Node.js
 - **Deployment**: AWS (EC2 Instance)
+- **Database**: Amazon DynamoDB
+- **Infrastructure as Code**: AWS CloudFormation
+- **Web Framework**: Express
 
 ## Endpoints
 HTTP endpoints are implemented:

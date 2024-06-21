@@ -28,10 +28,13 @@ const createUser = () => {
 const getUserById = (userId) => {
     const params = {
         TableName: TABLE_NAME,
-        Key: { id: userId },
+        Key: { id: userId }
     };
     return dynamoDB.get(params).promise()
-        .catch((error) => console.error('Error getting user by id:', error));
+        .catch((error) => {
+            console.error('Error getting user by id:', error);
+            throw error;
+        });
 };
 
 const addMessage = (senderId, message, recipientId) => {
@@ -45,7 +48,10 @@ const addMessage = (senderId, message, recipientId) => {
         ReturnValues: "UPDATED_NEW"
     };
     return dynamoDB.update(params).promise()
-        .catch((error) => console.error('Error adding message:', error));
+        .catch((error) => {
+            console.error('Error adding message:', error);
+            throw error;
+        });
 };
 
 const addBlockedUser = (userId, blockedUserId) => {
@@ -59,7 +65,10 @@ const addBlockedUser = (userId, blockedUserId) => {
         ReturnValues: "UPDATED_NEW"
     };
     return dynamoDB.update(params).promise()
-        .catch((error) => console.error('Error adding blocked user:', error));
+        .catch((error) => {
+            console.error('Error adding blocked user:', error);
+            throw error;
+        });
 };
 
 const isUserBlocked = async (userId, blockedUserId) => {
@@ -71,10 +80,9 @@ const isUserBlocked = async (userId, blockedUserId) => {
         return false;
     } catch (error) {
         console.error('Error checking if user is blocked:', error);
-        return false;
+        throw error;
     }
 };
-
 
 const getMessagesReceived = async (userId) => {
     try {
@@ -85,8 +93,8 @@ const getMessagesReceived = async (userId) => {
         return [];
     } catch (error) {
         console.error('Error getting messages received:', error);
-        return [];
+        throw error;
     }
 };
 
-module.exports = { createUser, getUserById, addBlockedUser, isUserBlocked, getMessagesReceived, addMessage };
+module.exports = { createUser, getUserById, addBlockedUser, isUserBlocked, getMessagesReceived, addMessage };

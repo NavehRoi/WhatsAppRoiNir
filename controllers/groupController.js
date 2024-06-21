@@ -48,6 +48,11 @@ const addMemberToGroupController = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        const group = await getGroupById(groupId);
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
         await addMemberToGroup(groupId, userId);
         res.status(200).json({ message: 'Member added to group successfully' });
     } catch (error) {
@@ -65,6 +70,11 @@ const removeMemberFromGroupController = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        const group = await getGroupById(groupId);
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
         await removeMemberFromGroup(groupId, userId);
         res.status(200).json({ message: 'Member removed from group successfully' });
     } catch (error) {
@@ -82,6 +92,11 @@ const addMessageToGroupController = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        const group = await getGroupById(groupId);
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
         await addMessageToGroup(groupId, senderId, message);
         res.status(200).json({ message: 'Message added to group successfully' });
     } catch (error) {
@@ -95,6 +110,11 @@ const getMessagesReceivedByGroupController = async (req, res) => {
         return res.status(400).json({ error: 'Group ID is required' });
     }
     try {
+        const group = await getGroupById(groupId);
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+        
         const messages = await getMessagesReceivedByGroup(groupId);
         res.status(200).json(messages);
     } catch (error) {
