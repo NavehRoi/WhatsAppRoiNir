@@ -17,7 +17,8 @@ const createGroupController = async (req, res) => {
         const { groupId } = await createGroup(name);
         res.status(201).json({ groupId });
     } catch (error) {
-        res.status(500).json({ error: 'Error creating group' });
+        console.error('Error creating group:', error);
+        res.status(500).json({ error: 'Error creating group', details: error.message });
     }
 };
 
@@ -34,7 +35,8 @@ const getGroupByIdController = async (req, res) => {
             res.status(404).json({ error: 'Group not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Error getting group' });
+        console.error('Error getting group:', error);
+        res.status(500).json({ error: 'Error getting group', details: error.message });
     }
 };
 
@@ -56,7 +58,8 @@ const addMemberToGroupController = async (req, res) => {
         await addMemberToGroup(groupId, userId);
         res.status(200).json({ message: 'Member added to group successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Error adding member to group' });
+        console.error('Error adding member to group:', error);
+        res.status(500).json({ error: 'Error adding member to group', details: error.message });
     }
 };
 
@@ -78,7 +81,8 @@ const removeMemberFromGroupController = async (req, res) => {
         await removeMemberFromGroup(groupId, userId);
         res.status(200).json({ message: 'Member removed from group successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Error removing member from group' });
+        console.error('Error removing member from group:', error);
+        res.status(500).json({ error: 'Error removing member from group', details: error.message });
     }
 };
 
@@ -100,7 +104,8 @@ const addMessageToGroupController = async (req, res) => {
         await addMessageToGroup(groupId, senderId, message);
         res.status(200).json({ message: 'Message added to group successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Error adding message to group' });
+        console.error('Error adding message to group:', error);
+        res.status(500).json({ error: 'Error adding message to group', details: error.message });
     }
 };
 
@@ -118,10 +123,10 @@ const getMessagesReceivedByGroupController = async (req, res) => {
         const messages = await getMessagesReceivedByGroup(groupId);
         res.status(200).json(messages);
     } catch (error) {
-        res.status(500).json({ error: 'Error getting messages received by group' });
+        console.error('Error getting messages received by group:', error);
+        res.status(500).json({ error: 'Error getting messages received by group', details: error.message });
     }
 };
-
 
 module.exports = {
     createGroupController,

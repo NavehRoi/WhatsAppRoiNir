@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 
+AWS.config.update({ region: 'eu-west-1' });
+
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = 'Groups';
 
