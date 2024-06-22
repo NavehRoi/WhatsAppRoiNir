@@ -6,7 +6,7 @@ const createUserController = async (req, res) => {
         res.status(201).json({ userId });
     } catch (error) {
         console.error('Error creating user:', error);
-        res.status(500).json({ error: 'Error creating user' });
+        res.status(500).json({ error: 'Error creating user', details: error.message });
     }
 };
 
@@ -25,7 +25,7 @@ const getUserByIdController = async (req, res) => {
         }
     } catch (error) {
         console.error('Error getting user:', error);
-        res.status(500).json({ error: 'Error getting user' });
+        res.status(500).json({ error: 'Error getting user', details: error.message });
     }
 };
 
@@ -44,7 +44,7 @@ const addBlockedUserController = async (req, res) => {
         res.status(200).json({ message: 'User blocked successfully' });
     } catch (error) {
         console.error('Error blocking user:', error);
-        res.status(500).json({ error: 'Error blocking user' });
+        res.status(500).json({ error: 'Error blocking user', details: error.message });
     }
 };
 
@@ -63,7 +63,7 @@ const getMessagesReceivedController = async (req, res) => {
         res.status(200).json(messages);
     } catch (error) {
         console.error('Error getting messages:', error);
-        res.status(500).json({ error: 'Error getting messages' });
+        res.status(500).json({ error: 'Error getting messages', details: error.message });
     }
 };
 
@@ -86,7 +86,7 @@ const addMessageController = async (req, res) => {
         res.status(200).json({ message: 'Message sent successfully' });
     } catch (error) {
         console.error('Error sending message:', error);
-        res.status(500).json({ error: 'Error sending message' });
+        res.status(500).json({ error: 'Error sending message', details: error.message });
     }
 };
 
